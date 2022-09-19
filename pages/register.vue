@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import firebase from '~/plugins/firebase'
+import firebase from '~/plugins/firebase';
 export default {
   data() {
     return {
@@ -23,35 +23,40 @@ export default {
     }
   },
   methods: {
-    register() {
-      if (!this.email || !this.password) {
-        alert('メールアドレスまたはパスワードが入力されていません')
+    async register() {
+      if (!this.name || !this.email || !this.password) {
+        alert('すべての項目を入力してください！')
         return
       }
       firebase
         .auth()
         .createUserWithEmailAndPassword(this.email, this.password)
         .then((data) => {
-          data.user.sendEmailVerification().then(() => {
-            this.$router.replace('/confirm')
-          })
+          const sendData = {
+            id: data.user.uid,
+            name: this.name,
+            email: this.email,
+            password: this.password,
+          };
+          this.$axios.post("http://127.0.0.1:8000/api/v1/user", sendData);
+          this.$router.push('/login');
         })
         .catch((error) => {
           switch (error.code) {
             case 'auth/invalid-email':
-              alert('メールアドレスの形式が違います。')
-              break
+              alert('メールアドレスの形式が違います。');
+              break;
             case 'auth/email-already-in-use':
-              alert('このメールアドレスはすでに使われています。')
-              break
+              alert('このメールアドレスはすでに使われています。');
+              break;
             case 'auth/weak-password':
-              alert('パスワードは6文字以上で入力してください。')
-              break
+              alert('パスワードは6文字以上で入力してください。');
+              break;
             default:
-              alert('エラーが起きました。しばらくしてから再度お試しください。')
-              break
+              alert('エラーが起きました。しばらくしてから再度お試しください。');
+              break;
           }
-        })
+        });
     },
   },
 }

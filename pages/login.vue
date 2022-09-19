@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import firebase from '~/plugins/firebase'
+import firebase from '~/plugins/firebase';
 export default {
   data() {
     return {
@@ -23,15 +23,15 @@ export default {
   methods: {
     login() {
       if (!this.email || !this.password) {
-        alert('メールアドレスまたはパスワードが入力されていません。')
-        return
+        alert('メールアドレスまたはパスワードが入力されていません。');
+        return;
       }
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then(() => {
-          alert('ログインが完了しました。')
-          this.$router.push('/')
+          alert('ログインが完了しました。');
+          this.$router.push('/');
         })
         .catch((error) => {
           switch (error.code) {
