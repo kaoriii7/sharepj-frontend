@@ -36,7 +36,6 @@ export default {
             id: data.user.uid,
             name: this.name,
             email: this.email,
-            password: this.password,
           };
           this.$axios.post("http://127.0.0.1:8000/api/v1/user", sendData);
           this.$router.push('/login');

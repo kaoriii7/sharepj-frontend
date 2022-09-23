@@ -14,12 +14,12 @@
       <br>
       <textarea name="content" v-model="content" cols="20" rows="6" required></textarea>
       <br>
-      <button @click="insertPost">シェアする</button>
+      <button @click="post">シェアする</button>
     </div>
     <h2>投稿内容</h2>
     <div v-for="post in posts" :key="post.id">
       <p>{{ post.content }}</p>
-      <p>{{ post }}</p>
+      <p>{{ post.user_id }}</p>
       <button @click="deletePost(post.id)">削除</button>
     </div>
   </div>
@@ -31,9 +31,10 @@ export default {
   data() {
     return {
       message: 'ログインしてないよ^^;',
-      content: "",
-      uid: "",
+      content: null,
+      uid: null,
       posts: [],
+      email: null,
     };
   },
   methods: {
@@ -52,13 +53,14 @@ export default {
       );
       this.posts = resData.data.data;
     },
+
     fetchData() {
       firebase.auth().onAuthStateChanged((user) => {
         this.uid = user.uid;
         this.getPostData();
       });
     },
-    insertPost() {
+    post() {
       if (!this.content) {
         alert("シェアする内容を入力してね");
         return;
